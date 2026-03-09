@@ -10,6 +10,26 @@ const CHAIN_COLORS: Record<Chain, string> = {
   "Base Sepolia": "#60A5FA",
 };
 
+const CHAIN_ICON_COLORS: Record<Chain, string> = {
+  Ethereum: "#627EEA",
+  Base: "#0052FF",
+  Polygon: "#8247E5",
+  Sepolia: "#F59E0B",
+  "Base Sepolia": "#F97316",
+};
+
+function ChainIcon({ chain, size = 20 }: { chain: Chain; size?: number }) {
+  return (
+    <div style={{
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      backgroundColor: CHAIN_ICON_COLORS[chain],
+      flexShrink: 0,
+    }} />
+  );
+}
+
 const TOKEN_COLORS: Record<Token, string> = {
   ETH: "#627EEA",
   USDC: "#2775CA",
@@ -73,15 +93,10 @@ export function ChainSelector({ value, onChange }: ChainSelectorProps) {
           width: "100%",
         }}
       >
-        <div
-          style={{
-            width: "20px",
-            height: "20px",
-            borderRadius: "50%",
-            backgroundColor: value ? CHAIN_COLORS[value] : "var(--eco-step-circle-border)",
-            flexShrink: 0,
-          }}
-        />
+        {value
+          ? <ChainIcon chain={value} size={20} />
+          : <div style={{ width: "20px", height: "20px", borderRadius: "50%", backgroundColor: "var(--eco-step-circle-border)", flexShrink: 0 }} />
+        }
         <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "left" }}>
           {value ?? "Chain"}
         </span>
@@ -123,15 +138,7 @@ export function ChainSelector({ value, onChange }: ChainSelectorProps) {
                 textAlign: "left",
               }}
             >
-              <div
-                style={{
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "50%",
-                  backgroundColor: CHAIN_COLORS[chain],
-                  flexShrink: 0,
-                }}
-              />
+              <ChainIcon chain={chain} size={16} />
               {chain}
             </button>
           ))}

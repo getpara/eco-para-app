@@ -62,16 +62,6 @@ export default function OriginCard({ chain, token, amount, onChainChange, onToke
           padding: "8px 0",
         }}
       >
-        <div
-          style={{
-            width: "72px",
-            height: "72px",
-            borderRadius: "50%",
-            backgroundColor: token ? TOKEN_COLORS[token] : "var(--eco-pill-bg)",
-            border: "2px solid var(--eco-step-circle-border)",
-            transition: "background-color 0.2s",
-          }}
-        />
         <input
           type="text"
           inputMode="decimal"

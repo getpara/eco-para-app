@@ -56,16 +56,6 @@ export default function DestinationCard({ chain, token, onChainChange, onTokenCh
           justifyContent: "center",
         }}
       >
-        <div
-          style={{
-            width: "72px",
-            height: "72px",
-            borderRadius: "50%",
-            backgroundColor: token ? TOKEN_COLORS[token] : "var(--eco-pill-bg)",
-            border: "2px solid var(--eco-step-circle-border)",
-            transition: "background-color 0.2s",
-          }}
-        />
         <span
           style={{
             fontSize: "40px",
