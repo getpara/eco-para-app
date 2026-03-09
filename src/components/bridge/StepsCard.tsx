@@ -14,7 +14,7 @@ interface StepsCardProps {
 const STEPS = [
   { label: "Approve Amount", subtitle: null },
   { label: "Confirm Transaction", subtitle: "Sign with Permit3" },
-  { label: "Submit to Chain", subtitle: null },
+  { label: "Submit to Solvers", subtitle: null },
 ];
 
 export default function StepsCard({
@@ -62,7 +62,7 @@ export default function StepsCard({
     return "Bridge";
   }
 
-  const canBridge = isConnected && !!originChain && !!token && !!amount && !isBusy;
+  const canBridge = isConnected && !!originChain && !!destChain && !!token && !!amount && !isBusy;
 
   return (
     <div

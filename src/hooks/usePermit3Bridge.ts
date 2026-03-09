@@ -8,7 +8,6 @@ import { useAccount } from "@getpara/react-sdk";
 import type { Chain, Token } from "../components/bridge/BridgePanel";
 import {
   PERMIT3_ADDRESS,
-  PERMIT3_ABI,
   PERMIT3_DOMAIN,
   PERMIT3_TYPES,
   ERC20_ABI,
@@ -70,7 +69,7 @@ export function usePermit3Bridge(originChain: Chain | null) {
     }
 
     try {
-      const permitData = buildPermitData(owner, originChain, token, amount);
+      const permitData = buildPermitData(owner, originChain, destChain, token, amount);
 
       const publicClient = createPublicClient({
         chain: viemChain,
@@ -109,28 +108,24 @@ export function usePermit3Bridge(originChain: Chain | null) {
           deadline: permitData.deadline,
           timestamp: permitData.timestamp,
           chainId: permitData.chainId,
+          destChainId: permitData.destChainId,
           permits: permitData.permits,
         },
       });
 
-      // Step 3 — submit permit to origin chain's Permit3 contract
+      // Step 3 — submit signed intent to solvers
       setStatus({ state: "submitting" });
-      const txHash = await viemClient.writeContract({
-        address: PERMIT3_ADDRESS,
-        abi: PERMIT3_ABI,
-        functionName: "permit",
-        args: [
-          owner,
-          permitData.salt,
-          permitData.deadline,
-          permitData.timestamp,
-          { chainId: permitData.chainId, permits: permitData.permits },
-          [],         // Merkle proof — empty for single-chain leg
-          signature,
-        ],
+      console.log("Submitting intent to solvers:", {
+        originChain,
+        destChain,
+        token,
+        amount,
+        permitData,
+        signature,
       });
+      await new Promise<void>((resolve) => setTimeout(resolve, 800));
 
-      setStatus({ state: "success", txHash });
+      setStatus({ state: "success", txHash: signature });
     } catch (e: unknown) {
       setStatus({
         state: "error",

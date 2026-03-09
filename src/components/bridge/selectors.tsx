@@ -15,6 +15,25 @@ const TOKEN_COLORS: Record<Token, string> = {
   USDC: "#2775CA",
 };
 
+function TokenIcon({ token, size = 20 }: { token: Token; size?: number }) {
+  if (token === "ETH") {
+    return (
+      <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+        <path d="M10 1.5L3.5 10.5L10 13.5L16.5 10.5L10 1.5Z" fill="#627EEA" />
+        <path d="M10 1.5L10 13.5L16.5 10.5L10 1.5Z" fill="#3C59DB" />
+        <path d="M3.5 12L10 19L16.5 12L10 15L3.5 12Z" fill="#627EEA" />
+        <path d="M10 15L16.5 12L10 19L10 15Z" fill="#3C59DB" />
+      </svg>
+    );
+  }
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9.5" fill="#2775CA" />
+      <text x="10" y="14.5" textAnchor="middle" fill="white" fontSize="11" fontFamily="Arial, sans-serif" fontWeight="700">$</text>
+    </svg>
+  );
+}
+
 const CHAINS: Chain[] = ["Ethereum", "Base", "Polygon", "Sepolia", "Base Sepolia"];
 const TOKENS: Token[] = ["ETH", "USDC"];
 
@@ -158,15 +177,10 @@ export function TokenSelector({ value, onChange }: TokenSelectorProps) {
           width: "100%",
         }}
       >
-        <div
-          style={{
-            width: "20px",
-            height: "20px",
-            borderRadius: "50%",
-            backgroundColor: value ? TOKEN_COLORS[value] : "var(--eco-step-circle-border)",
-            flexShrink: 0,
-          }}
-        />
+        {value
+          ? <TokenIcon token={value} size={20} />
+          : <div style={{ width: "20px", height: "20px", borderRadius: "50%", backgroundColor: "var(--eco-step-circle-border)", flexShrink: 0 }} />
+        }
         <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "left" }}>
           {value ?? "Token"}
         </span>
@@ -208,15 +222,7 @@ export function TokenSelector({ value, onChange }: TokenSelectorProps) {
                 textAlign: "left",
               }}
             >
-              <div
-                style={{
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "50%",
-                  backgroundColor: TOKEN_COLORS[token],
-                  flexShrink: 0,
-                }}
-              />
+              <TokenIcon token={token} size={16} />
               {token}
             </button>
           ))}

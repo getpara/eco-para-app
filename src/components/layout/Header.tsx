@@ -28,43 +28,19 @@ export default function Header({ isConnected }: HeaderProps) {
       }}
     >
       {/* Logo */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <div
-          style={{
-            width: "32px",
-            height: "32px",
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--eco-gradient-start), var(--eco-gradient-end))",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            fontStyle: "italic",
-            fontWeight: 700,
-            fontSize: "18px",
-            flexShrink: 0,
-          }}
-        >
-          e
-        </div>
-        <span
-          style={{
-            fontWeight: 700,
-            fontSize: "20px",
-            background: "linear-gradient(90deg, var(--eco-gradient-start), var(--eco-gradient-end))",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          eco
-        </span>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <img
+          src="/eco-logo.svg"
+          alt="Eco"
+          width={32}
+          height={32}
+          style={{ flexShrink: 0 }}
+        />
         <span
           style={{
             fontSize: "14px",
             color: "var(--eco-text-secondary)",
             fontWeight: 500,
-            marginLeft: "2px",
           }}
         >
           Portal
@@ -101,6 +77,7 @@ export default function Header({ isConnected }: HeaderProps) {
         </button>
 
         <button
+          onClick={() => openModal({ step: "ACCOUNT_PROFILE" })}
           style={{
             width: "36px",
             height: "36px",
@@ -117,7 +94,7 @@ export default function Header({ isConnected }: HeaderProps) {
           }}
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--eco-pill-bg)")}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
-          aria-label="Settings"
+          aria-label="Profile"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="3" />

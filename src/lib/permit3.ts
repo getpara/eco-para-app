@@ -52,6 +52,7 @@ export const PERMIT3_TYPES = {
     { name: "deadline", type: "uint48" },
     { name: "timestamp", type: "uint48" },
     { name: "chainId", type: "uint64" },
+    { name: "destChainId", type: "uint64" },
     { name: "permits", type: "AllowanceOrTransfer[]" },
   ],
   AllowanceOrTransfer: [
@@ -122,12 +123,16 @@ export const ERC20_ABI = [
 
 export function buildPermitData(
   owner: Address,
-  chain: Chain,
+  originChain: Chain,
+  destChain: Chain,
   token: Token,
   amount: string,
 ) {
-  const tokenAddr = TOKEN_ADDRESSES[token][chain];
-  if (!tokenAddr) throw new Error(`No ${token} address for ${chain}`);
+  const tokenAddr = TOKEN_ADDRESSES[token][originChain];
+  if (!tokenAddr) throw new Error(`No ${token} address for ${originChain}`);
+
+  const destTokenAddr = TOKEN_ADDRESSES[token][destChain];
+  if (!destTokenAddr) throw new Error(`No ${token} address for ${destChain}`);
 
   const amountDelta = parseUnits(amount, TOKEN_DECIMALS[token]);
   const salt = ("0x" +
@@ -138,16 +143,24 @@ export function buildPermitData(
 
   return {
     tokenAddr,
-    amountDelta,                     // bigint (uint160)
+    destTokenAddr,
+    amountDelta,
     salt,
-    deadline: now + 3600,            // number (uint48)
-    timestamp: now,                  // number (uint48)
-    chainId: BigInt(CHAIN_IDS[chain]), // bigint (uint64)
+    deadline: now + 3600,
+    timestamp: now,
+    chainId: BigInt(CHAIN_IDS[originChain]),
+    destChainId: BigInt(CHAIN_IDS[destChain]),
     permits: [
       {
-        modeOrExpiration: 0,         // number (uint48) — 0 = TransferERC20
+        modeOrExpiration: 0,   // TransferERC20 — pull from origin
         token: tokenAddr,
-        account: owner,              // self — in production this is the bridge/intent contract
+        account: owner,
+        amountDelta,
+      },
+      {
+        modeOrExpiration: 0,   // TransferERC20 — push on destination
+        token: destTokenAddr,
+        account: owner,
         amountDelta,
       },
     ],
