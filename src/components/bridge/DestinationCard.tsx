@@ -1,6 +1,15 @@
 "use client";
+import type { Chain, Token } from "./BridgePanel";
+import { ChainSelector, TokenSelector, CHAIN_COLORS, TOKEN_COLORS } from "./selectors";
 
-export default function DestinationCard() {
+interface DestinationCardProps {
+  chain: Chain | null;
+  token: Token | null;
+  onChainChange: (chain: Chain) => void;
+  onTokenChange: (token: Token) => void;
+}
+
+export default function DestinationCard({ chain, token, onChainChange, onTokenChange }: DestinationCardProps) {
   return (
     <div
       style={{
@@ -13,6 +22,7 @@ export default function DestinationCard() {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
+        alignSelf: "stretch",
       }}
     >
       {/* Title */}
@@ -30,69 +40,11 @@ export default function DestinationCard() {
 
       {/* Chain and Token selectors */}
       <div style={{ display: "flex", gap: "8px" }}>
-        <button
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "8px 14px",
-            borderRadius: "999px",
-            border: "1px solid var(--eco-border)",
-            backgroundColor: "var(--eco-pill-bg)",
-            color: "var(--eco-text-primary)",
-            fontWeight: 500,
-            fontSize: "13px",
-            cursor: "pointer",
-            flex: 1,
-          }}
-        >
-          <div
-            style={{
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              backgroundColor: "var(--eco-step-circle-border)",
-              flexShrink: 0,
-            }}
-          />
-          Select Chain
-          <svg style={{ marginLeft: "auto" }} width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <button
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "8px 14px",
-            borderRadius: "999px",
-            border: "1px solid var(--eco-border)",
-            backgroundColor: "var(--eco-pill-bg)",
-            color: "var(--eco-text-primary)",
-            fontWeight: 500,
-            fontSize: "13px",
-            cursor: "pointer",
-            flex: 1,
-          }}
-        >
-          <div
-            style={{
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              backgroundColor: "var(--eco-step-circle-border)",
-              flexShrink: 0,
-            }}
-          />
-          Select Token
-          <svg style={{ marginLeft: "auto" }} width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        <ChainSelector value={chain} onChange={onChainChange} />
+        <TokenSelector value={token} onChange={onTokenChange} />
       </div>
 
-      {/* Token icon placeholder */}
+      {/* Token icon + receive amount (matches OriginCard layout) */}
       <div
         style={{
           display: "flex",
@@ -100,6 +52,8 @@ export default function DestinationCard() {
           alignItems: "center",
           gap: "12px",
           padding: "8px 0",
+          flex: 1,
+          justifyContent: "center",
         }}
       >
         <div
@@ -107,10 +61,26 @@ export default function DestinationCard() {
             width: "72px",
             height: "72px",
             borderRadius: "50%",
-            backgroundColor: "var(--eco-pill-bg)",
+            backgroundColor: token ? TOKEN_COLORS[token] : "var(--eco-pill-bg)",
             border: "2px solid var(--eco-step-circle-border)",
+            transition: "background-color 0.2s",
           }}
         />
+        <span
+          style={{
+            fontSize: "40px",
+            fontWeight: 700,
+            color: "var(--eco-text-muted)",
+            lineHeight: 1,
+          }}
+        >
+          —
+        </span>
+        {token && (
+          <span style={{ fontSize: "14px", color: "var(--eco-text-secondary)", fontWeight: 500 }}>
+            {token}
+          </span>
+        )}
       </div>
 
       {/* Footer */}
@@ -118,18 +88,39 @@ export default function DestinationCard() {
         style={{
           borderTop: "1px solid var(--eco-border)",
           paddingTop: "16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            fontSize: "12px",
-          }}
-        >
-          <span style={{ color: "var(--eco-text-secondary)" }}>Destination Address</span>
-          <span style={{ color: "var(--eco-text-primary)", fontWeight: 500 }}>—</span>
-        </div>
+        {[
+          ["Chain", chain ?? "—"],
+          ["Token", token ?? "—"],
+          ["Destination Address", "—"],
+        ].map(([label, value]) => (
+          <div
+            key={label}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "12px",
+            }}
+          >
+            <span style={{ color: "var(--eco-text-secondary)" }}>{label}</span>
+            <span
+              style={{
+                color: label === "Chain" && chain
+                  ? CHAIN_COLORS[chain]
+                  : label === "Token" && token
+                  ? TOKEN_COLORS[token]
+                  : "var(--eco-text-primary)",
+                fontWeight: 500,
+              }}
+            >
+              {value}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

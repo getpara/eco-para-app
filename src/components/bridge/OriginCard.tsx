@@ -1,6 +1,24 @@
 "use client";
+import type { Chain, Token } from "./BridgePanel";
+import { ChainSelector, TokenSelector, CHAIN_COLORS, TOKEN_COLORS } from "./selectors";
 
-export default function OriginCard() {
+interface OriginCardProps {
+  chain: Chain | null;
+  token: Token | null;
+  amount: string;
+  onChainChange: (chain: Chain) => void;
+  onTokenChange: (token: Token) => void;
+  onAmountChange: (amount: string) => void;
+}
+
+export default function OriginCard({ chain, token, amount, onChainChange, onTokenChange, onAmountChange }: OriginCardProps) {
+  function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    if (val === "" || /^\d*\.?\d*$/.test(val)) {
+      onAmountChange(val);
+    }
+  }
+
   return (
     <div
       style={{
@@ -30,66 +48,8 @@ export default function OriginCard() {
 
       {/* Chain and Token selectors */}
       <div style={{ display: "flex", gap: "8px" }}>
-        <button
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "8px 14px",
-            borderRadius: "999px",
-            border: "1px solid var(--eco-border)",
-            backgroundColor: "var(--eco-pill-bg)",
-            color: "var(--eco-text-primary)",
-            fontWeight: 500,
-            fontSize: "13px",
-            cursor: "pointer",
-            flex: 1,
-          }}
-        >
-          <div
-            style={{
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              backgroundColor: "var(--eco-step-circle-border)",
-              flexShrink: 0,
-            }}
-          />
-          Select Chain
-          <svg style={{ marginLeft: "auto" }} width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <button
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "8px 14px",
-            borderRadius: "999px",
-            border: "1px solid var(--eco-border)",
-            backgroundColor: "var(--eco-pill-bg)",
-            color: "var(--eco-text-primary)",
-            fontWeight: 500,
-            fontSize: "13px",
-            cursor: "pointer",
-            flex: 1,
-          }}
-        >
-          <div
-            style={{
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              backgroundColor: "var(--eco-step-circle-border)",
-              flexShrink: 0,
-            }}
-          />
-          Select Token
-          <svg style={{ marginLeft: "auto" }} width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        <ChainSelector value={chain} onChange={onChainChange} />
+        <TokenSelector value={token} onChange={onTokenChange} />
       </div>
 
       {/* Token icon + amount */}
@@ -107,20 +67,35 @@ export default function OriginCard() {
             width: "72px",
             height: "72px",
             borderRadius: "50%",
-            backgroundColor: "var(--eco-pill-bg)",
+            backgroundColor: token ? TOKEN_COLORS[token] : "var(--eco-pill-bg)",
             border: "2px solid var(--eco-step-circle-border)",
+            transition: "background-color 0.2s",
           }}
         />
-        <span
+        <input
+          type="text"
+          inputMode="decimal"
+          placeholder="0.00"
+          value={amount}
+          onChange={handleAmountChange}
           style={{
             fontSize: "40px",
             fontWeight: 700,
-            color: "var(--eco-text-muted)",
+            color: amount ? "var(--eco-text-primary)" : "var(--eco-text-muted)",
             lineHeight: 1,
+            background: "none",
+            border: "none",
+            outline: "none",
+            textAlign: "center",
+            width: "100%",
+            padding: 0,
           }}
-        >
-          0.00
-        </span>
+        />
+        {token && (
+          <span style={{ fontSize: "14px", color: "var(--eco-text-secondary)", fontWeight: 500 }}>
+            {token}
+          </span>
+        )}
       </div>
 
       {/* Footer metadata */}
@@ -134,8 +109,8 @@ export default function OriginCard() {
         }}
       >
         {[
-          ["Address", "—"],
-          ["Balance", "—"],
+          ["Chain", chain ?? "—"],
+          ["Token", token ?? "—"],
           ["Limit", "$250,000 USD"],
           ["Min", "$0.50 USD"],
         ].map(([label, value]) => (
@@ -148,7 +123,18 @@ export default function OriginCard() {
             }}
           >
             <span style={{ color: "var(--eco-text-secondary)" }}>{label}</span>
-            <span style={{ color: "var(--eco-text-primary)", fontWeight: 500 }}>{value}</span>
+            <span
+              style={{
+                color: label === "Chain" && chain
+                  ? CHAIN_COLORS[chain]
+                  : label === "Token" && token
+                  ? TOKEN_COLORS[token]
+                  : "var(--eco-text-primary)",
+                fontWeight: 500,
+              }}
+            >
+              {value}
+            </span>
           </div>
         ))}
       </div>
