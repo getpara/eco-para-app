@@ -15,7 +15,8 @@ export default function ParaProvider({ children }: { children: React.ReactNode }
     <QueryClientProvider client={queryClient}>
       <ParaSDKProvider
         paraClientConfig={{ apiKey: PARA_API_KEY, env: PARA_ENV }}
-        config={{ appName: "EcoPortal" }}>
+        config={{ appName: "EcoPortal" }}
+        paraModalConfig={{ theme: { backgroundColor: "#839cd0" } }}>
         {children}
       </ParaSDKProvider>
     </QueryClientProvider>
