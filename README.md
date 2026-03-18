@@ -35,3 +35,5 @@ Add your Para API key to `.env.local`:
 NEXT_PUBLIC_PARA_API_KEY=your_api_key_here
 NEXT_PUBLIC_PARA_ENVIRONMENT=BETA
 ```
+
+> You can run this app with a regular API key from [Para](https://getpara.com). To set permissions yourself, [get in touch with us](https://getpara.com/talk-to-us) or view the hosted demo link.
