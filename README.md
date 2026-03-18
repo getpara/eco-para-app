@@ -31,4 +31,4 @@ npm run dev
 
 Permissions are only configured on Sepolia/testnets.
 
-> You can run this app with a regular API key from [Para](https://getpara.com). To set permissions yourself, [get in touch with us](https://getpara.com/talk-to-us) or view the hosted demo link.
+> You can run this app with a regular API key from [Para](https://getpara.com). To set permissions yourself, [get in touch with us](https://getpara.com/talk-to-us) or view the [hosted demo](https://eco-para-app.vercel.app/).
