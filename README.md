@@ -6,8 +6,8 @@ A demo of a "sign once, bridge anything" UX — the key idea being that with Par
 
 ## How it works
 
-1. **Configure origin** — pick which chain your tokens are on, which token, and how much
-2. **Configure destination** — pick which chain you want them to arrive on
+1. **Configure origin** — pick which chain your tokens are on, which token, and how much. Please configure only Sepolia or Base Sepolia. Please select Eth as your token.
+2. **Configure destination** — pick which chain you want them to arrive on. Please also select Eth as your token.
 3. **Hit Bridge** — Para silently handles three things in sequence:
    - **Approve**: grants Permit3 permission to move your tokens (one-time per token, also silent)
    - **Sign**: signs a Permit3 EIP-712 message encoding the full intent — origin chain, destination chain, token, amount — all in one signature
